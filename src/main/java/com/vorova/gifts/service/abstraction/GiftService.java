@@ -6,8 +6,8 @@ public interface GiftService {
 
     Long add(Gift gift);
 
-    boolean remove(long id);
+    void remove(long id);
 
-    boolean update(Gift gift);
+    void update(Gift gift);
 
 }

@@ -1,11 +1,16 @@
 package com.vorova.gifts.service.imp;
 
 import com.vorova.gifts.dao.abstraction.GiftDao;
+import com.vorova.gifts.exception.GiftException;
 import com.vorova.gifts.model.entity.Gift;
+import com.vorova.gifts.model.entity.Image;
 import com.vorova.gifts.service.abstraction.GiftService;
+import com.vorova.gifts.service.util.GiftUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 public class GiftServiceImp implements GiftService {
@@ -20,19 +25,35 @@ public class GiftServiceImp implements GiftService {
     @Override
     @Transactional
     public Long add(Gift gift) {
-        // todo проверка на корректность данного подарка
+        GiftUtil.checkCorrectly(gift);
+        if (gift.getImages() != null && !gift.getImages().isEmpty()) {
+            for (Image image : gift.getImages()) {
+                image.setGift(gift);
+            }
+        }
         return giftDao.add(gift);
     }
 
     @Override
-    public boolean remove(long id) {
-        // todo
-        return false;
+    @Transactional
+    public void remove(long id) {
+        Optional<Gift> optionalGift = giftDao.getById(id);
+        if(optionalGift.isEmpty()) {
+            throw new GiftException("Подарка с таким id не существует");
+        } else {
+            giftDao.remove(optionalGift.get());
+        }
     }
 
     @Override
-    public boolean update(Gift gift) {
-        // todo
-        return false;
+    @Transactional
+    public void update(Gift gift) {
+        GiftUtil.checkCorrectly(gift);
+        if (gift.getImages() != null && !gift.getImages().isEmpty()) {
+            for (Image image : gift.getImages()) {
+                image.setGift(gift);
+            }
+        }
+        giftDao.update(gift);
     }
 }

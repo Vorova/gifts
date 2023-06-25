@@ -5,24 +5,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GiftDto {
-
-    private long id;
+public class CreateGiftDto {
     private String title;
     private String description;
     private String shortDescription;
     private CategoryDto category;
     private double costPrice;
     private double price;
-    private Timestamp dateAdded;
-    private Boolean isEnabled;
     private List<ImageDto> images;
     private String type;
 }

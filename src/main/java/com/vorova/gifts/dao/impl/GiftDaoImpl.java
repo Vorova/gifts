@@ -1,11 +1,14 @@
 package com.vorova.gifts.dao.impl;
 
 import com.vorova.gifts.dao.abstraction.GiftDao;
+import com.vorova.gifts.exception.GiftException;
 import com.vorova.gifts.model.entity.Gift;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public class GiftDaoImpl implements GiftDao {
@@ -19,20 +22,36 @@ public class GiftDaoImpl implements GiftDao {
     }
 
     @Override
-    public Long add(Gift gift) {
+    public Long add(Gift gift) throws GiftException {
         entityManager.persist(gift);
+        entityManager.flush();
         return gift.getId();
     }
 
     @Override
-    public boolean remove(long id) {
-        // todo
-        return false;
+    public void remove(Gift gift) {
+        entityManager.remove(gift);
     }
 
     @Override
-    public boolean update(Gift gift) {
-        // todo
-        return false;
+    public void update(Gift gift) {
+        // Костыль для сохранения в базе даты добавления
+        // todo придумать как убрать костыль
+        try {
+            Gift gift1 = entityManager.find(Gift.class, gift.getId());
+            gift.setDateAdded(gift1.getDateAdded());
+        } catch (Exception e) {
+            throw new GiftException("Подарка с таким id не существует");
+        }
+        entityManager.merge(gift);
+    }
+
+    @Override
+    public Optional<Gift> getById(long id) {
+        try {
+            return Optional.of(entityManager.find(Gift.class, id));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 }
