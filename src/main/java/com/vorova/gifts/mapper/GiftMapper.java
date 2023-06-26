@@ -1,9 +1,6 @@
 package com.vorova.gifts.mapper;
 
-import com.vorova.gifts.model.dto.CategoryDto;
-import com.vorova.gifts.model.dto.CreateGiftDto;
-import com.vorova.gifts.model.dto.GiftDto;
-import com.vorova.gifts.model.dto.ImageDto;
+import com.vorova.gifts.model.dto.*;
 import com.vorova.gifts.model.entity.Category;
 import com.vorova.gifts.model.entity.Gift;
 import com.vorova.gifts.model.entity.Image;
@@ -34,6 +31,10 @@ public class GiftMapper {
 
     public Gift toGift(Gift gift) {
         return mapper.map(gift, Gift.class);
+    }
+
+    public GiftForUserDto toGiftForUserDto(Gift gift) {
+        return mapper.map(gift, GiftForUserDto.class);
     }
 
 }

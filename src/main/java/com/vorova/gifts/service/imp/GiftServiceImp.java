@@ -56,4 +56,11 @@ public class GiftServiceImp implements GiftService {
         }
         giftDao.update(gift);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Gift getById(Long id) {
+        return giftDao.getById(id).orElseThrow();
+    }
+
 }
