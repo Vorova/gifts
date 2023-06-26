@@ -42,3 +42,16 @@ CREATE TABLE fast_order
     name    VARCHAR(256),
     status  VARCHAR(32)
 );
+
+CREATE TABLE tag
+(
+    id    BIGSERIAL PRIMARY KEY,
+    title VARCHAR(64)
+);
+
+CREATE TABLE gift_tag
+(
+    gift_id BIGINT REFERENCES gift (id),
+    tag_id  BIGINT REFERENCES tag (id),
+    PRIMARY KEY (gift_id, tag_id)
+);

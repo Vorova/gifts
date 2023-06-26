@@ -4,6 +4,7 @@ import com.vorova.gifts.model.dto.*;
 import com.vorova.gifts.model.entity.Category;
 import com.vorova.gifts.model.entity.Gift;
 import com.vorova.gifts.model.entity.Image;
+import com.vorova.gifts.model.entity.TagSearch;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,7 @@ public class GiftMapper {
 
         mapper.createTypeMap(Image.class, ImageDto.class);
         mapper.createTypeMap(Category.class, CategoryDto.class);
+        mapper.createTypeMap(TagSearch.class, TagSearchDto.class);
     }
 
     public Gift toGift(CreateGiftDto createGiftDto) {
@@ -27,10 +29,6 @@ public class GiftMapper {
 
     public Gift toGift(GiftDto giftDto) {
         return mapper.map(giftDto, Gift.class);
-    }
-
-    public Gift toGift(Gift gift) {
-        return mapper.map(gift, Gift.class);
     }
 
     public GiftForUserDto toGiftForUserDto(Gift gift) {

@@ -24,4 +24,5 @@ public class GiftDto {
     private Boolean isEnabled;
     private List<ImageDto> images;
     private String type;
+    private List<TagSearchDto> tags;
 }

@@ -57,6 +57,12 @@ public class Gift {
     @Column(name = "type")
     private String type = "gift";
 
+    @ManyToMany
+    @JoinTable(name = "gift_tag",
+            joinColumns = @JoinColumn(name = "gift_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private List<TagSearch> tags;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

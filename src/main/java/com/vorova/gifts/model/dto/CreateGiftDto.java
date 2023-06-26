@@ -20,4 +20,5 @@ public class CreateGiftDto {
     private double price;
     private List<ImageDto> images;
     private String type;
+    private List<TagSearchDto> tags;
 }
