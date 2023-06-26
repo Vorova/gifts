@@ -35,11 +35,10 @@ public class GiftDaoImpl implements GiftDao {
 
     @Override
     public void update(Gift gift) {
-        // Костыль для сохранения в базе даты добавления
-        // todo придумать как убрать костыль
         try {
             Gift gift1 = entityManager.find(Gift.class, gift.getId());
             gift.setDateAdded(gift1.getDateAdded());
+            gift.setType(gift1.getType());
         } catch (Exception e) {
             throw new GiftException("Подарка с таким id не существует");
         }

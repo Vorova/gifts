@@ -62,12 +62,12 @@ public class Gift {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Gift gift = (Gift) o;
-        return id == gift.id && Double.compare(gift.costPrice, costPrice) == 0 && Double.compare(gift.price, price) == 0 && Objects.equals(title, gift.title) && Objects.equals(description, gift.description) && Objects.equals(category, gift.category);
+        return id == gift.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, description, category, costPrice, price);
+        return Objects.hash(id);
     }
 
 }
