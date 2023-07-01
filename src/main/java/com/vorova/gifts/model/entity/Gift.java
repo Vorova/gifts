@@ -1,5 +1,7 @@
 package com.vorova.gifts.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,6 +19,9 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "gift")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Gift {
 
     @Id
@@ -32,7 +37,7 @@ public class Gift {
     @Column(name = "short_description")
     private String shortDescription;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "category")
     private Category category;
 
@@ -48,7 +53,7 @@ public class Gift {
     @Column(name = "is_enabled")
     private Boolean isEnabled = false;
 
-    @OneToMany(cascade = CascadeType.ALL,
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             orphanRemoval = true,
             fetch = FetchType.LAZY,
             mappedBy = "gift")
@@ -62,6 +67,9 @@ public class Gift {
             joinColumns = @JoinColumn(name = "gift_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private List<TagSearch> tags;
+
+    @Column(name = "tag_for")
+    private String tagFor = "unisex";
 
     @Override
     public boolean equals(Object o) {

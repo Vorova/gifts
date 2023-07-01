@@ -16,7 +16,8 @@ CREATE TABLE gift
     price             NUMERIC(7, 2) NOT NULL,
     date_added        TIMESTAMP,
     is_enabled        BOOLEAN DEFAULT FALSE,
-    type              VARCHAR(32)
+    type              VARCHAR(32),
+    tag_for           VARCHAR(32) DEFAULT 'unisex'
 );
 
 CREATE TABLE image

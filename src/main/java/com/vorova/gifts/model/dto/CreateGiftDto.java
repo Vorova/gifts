@@ -21,4 +21,5 @@ public class CreateGiftDto {
     private List<ImageDto> images;
     private String type;
     private List<TagSearchDto> tags;
+    private String tagFor;
 }

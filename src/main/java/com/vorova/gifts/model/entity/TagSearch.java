@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -23,8 +23,16 @@ public class TagSearch {
     @Column(name = "title")
     private String title;
 
-    @ManyToMany
-    @JoinTable(name = "gift_tag")
-    private List<Gift> gifts;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TagSearch tagSearch = (TagSearch) o;
+        return Objects.equals(id, tagSearch.id);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

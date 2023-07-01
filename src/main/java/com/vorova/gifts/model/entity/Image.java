@@ -1,5 +1,7 @@
 package com.vorova.gifts.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,13 +16,16 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Image {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gift_id")
     private Gift gift;
 
@@ -35,11 +40,11 @@ public class Image {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Image image = (Image) o;
-        return Objects.equals(id, image.id) && Objects.equals(gift, image.gift) && Objects.equals(link, image.link) && Objects.equals(isMain, image.isMain);
+        return Objects.equals(id, image.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, gift, link, isMain);
+        return Objects.hash(id);
     }
 }

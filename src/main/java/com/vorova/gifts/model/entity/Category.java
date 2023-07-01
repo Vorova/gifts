@@ -32,11 +32,11 @@ public class Category {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
-        return Objects.equals(id, category.id) && Objects.equals(name, category.name) && Objects.equals(parent, category.parent);
+        return Objects.equals(id, category.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, parent);
+        return Objects.hash(id);
     }
 }

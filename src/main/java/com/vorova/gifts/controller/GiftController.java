@@ -2,14 +2,13 @@ package com.vorova.gifts.controller;
 
 import com.vorova.gifts.mapper.GiftMapper;
 import com.vorova.gifts.model.dto.GiftForUserDto;
-import com.vorova.gifts.model.dto.TagSearchDto;
+import com.vorova.gifts.model.dto.FilterSearchDto;
 import com.vorova.gifts.service.abstraction.GiftService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -17,7 +16,6 @@ import java.util.NoSuchElementException;
 public class GiftController {
 
     private final GiftMapper giftMapper;
-
     private final GiftService giftService;
 
     @Autowired
@@ -40,12 +38,13 @@ public class GiftController {
     }
 
     @PostMapping("/search")
-    public ResponseEntity<?> getByFilter(List<TagSearchDto> tags) {
+    public ResponseEntity<?> getByFilter(@RequestBody FilterSearchDto filterSearchDto) {
         try {
-            return null;
+            return ResponseEntity.ok(giftService.getByFilter(filterSearchDto));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Неизвестная ошибка! Не удалось получить список подарков");
+                    .body(e.toString());
+                    //.body("Неизвестная ошибка! Не удалось получить список подарков");
         }
     }
 
