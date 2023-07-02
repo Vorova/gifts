@@ -53,7 +53,11 @@ public class Gift {
     @Column(name = "is_enabled")
     private Boolean isEnabled = false;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+    @OneToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.DETACH,
+            CascadeType.REMOVE,
+            CascadeType.MERGE},
             orphanRemoval = true,
             fetch = FetchType.LAZY,
             mappedBy = "gift")

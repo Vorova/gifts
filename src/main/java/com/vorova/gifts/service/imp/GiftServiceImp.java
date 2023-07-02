@@ -50,12 +50,12 @@ public class GiftServiceImp implements GiftService {
     @Override
     @Transactional
     public void update(Gift gift) {
-        GiftUtil.checkCorrectly(gift);
         if (gift.getImages() != null && !gift.getImages().isEmpty()) {
             for (Image image : gift.getImages()) {
                 image.setGift(gift);
             }
         }
+        GiftUtil.checkCorrectly(gift);
         giftDao.update(gift);
     }
 

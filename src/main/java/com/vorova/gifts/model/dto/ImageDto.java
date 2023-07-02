@@ -11,6 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ImageDto {
 
+    private Long id;
     private Long giftId;
     private String link;
     private Boolean isMain;
