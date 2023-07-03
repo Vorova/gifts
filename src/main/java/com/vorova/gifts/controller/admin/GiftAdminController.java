@@ -32,7 +32,9 @@ public class GiftAdminController {
         } catch (GiftException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Не удалось добавить подарок по причине(ам):" + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Неизвестная ошибка! Не удалось добавить подарок");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body(e.getMessage());
+                    .body("Неизвестная ошибка! Не удалось добавить подарок");
         }
     }
 

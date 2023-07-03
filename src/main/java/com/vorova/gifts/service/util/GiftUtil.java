@@ -26,6 +26,7 @@ public class GiftUtil {
         if (gift.getTitle() == null || gift.getTitle().strip().equals("")) {
             errors.append("Название подарка не может быть пустым. \n");
         }
+        // todo проверка на прнадлежность фотографии к данной сущности
         if (!errors.isEmpty()) {
             throw new GiftException(errors.toString());
         }
