@@ -15,7 +15,7 @@ CREATE TABLE gift
     cost_price        NUMERIC(7, 2) NOT NULL,
     price             NUMERIC(7, 2) NOT NULL,
     date_added        TIMESTAMP,
-    is_enabled        BOOLEAN DEFAULT FALSE,
+    is_enabled        BOOLEAN     DEFAULT FALSE,
     type              VARCHAR(32),
     tag_for           VARCHAR(32) DEFAULT 'unisex'
 );
@@ -55,4 +55,23 @@ CREATE TABLE gift_tag
     gift_id BIGINT REFERENCES gift (id),
     tag_id  BIGINT REFERENCES tag (id),
     PRIMARY KEY (gift_id, tag_id)
+);
+
+CREATE TABLE users
+(
+    id       BIGSERIAL PRIMARY KEY,
+    username VARCHAR(128),
+    password VARCHAR(128)
+);
+
+CREATE TABLE role
+(
+    id        BIGSERIAL PRIMARY KEY,
+    authority VARCHAR(64)
+);
+
+CREATE TABLE users_role
+(
+    user_id BIGINT REFERENCES users (id),
+    role_id BIGINT REFERENCES role (id)
 );
