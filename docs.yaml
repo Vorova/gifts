@@ -1,0 +1,174 @@
+openapi: 3.0.1
+info:
+  title: Service for fast order by gifts
+  description: >-
+    Сервис собой представляет набор API, предназначенных для работы приложения
+    быстрых заказов подарков.
+  contact:
+    name: Vladislav Vorobyov
+    email: vvvorova@gmail.com
+  version: 1.0.0
+paths:
+  /api/admin/gift/add:
+    post:
+      description: |-
+        В дальнеёшем потребуется JWT токен для авторизации и аутентификации пользователя при данном запросе
+      tags:
+        - add
+      summary: adding new gift for persist
+      operationId: persisted new gift
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/CreateGiftDto'
+      responses: 
+        '201':
+          description: подарок успешно создан и сохранен
+          content: 
+            application/json:
+              schema: 
+                type: integer
+                example: 747
+                description: id созданного подарка
+        '400':
+          description: |- 
+            не удалось добавить подарок. Список причин в строковой форме.
+        '500':
+          description: не удалось добавить подарок по неизвестной причине
+  /api/admin/gift/update:
+    put:
+      description: |-
+        В дальнеёшем потребуется JWT токен для авторизации и аутентификации пользователя при данном запросе
+      tags:
+        - update
+      summary: updating gift
+      operationId: update exists gift
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/GiftDto'
+      responses: 
+        '200':
+          description: подарок успешно сохранен
+          content: 
+            application/json:
+              schema: 
+                type: string
+                example: подарок успешно сохранен
+        '400':
+          description: |- 
+            не удалось сохранить подарок. Список причин в строковой форме.
+        '500':
+          description: не удалось обновить подарок по неизвестной причине
+components:
+  schemas:
+    CreateGiftDto:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Title for gift
+        description:
+          type: string
+          example: http://link-on-description-html.html
+        shortDescription: 
+          type: string
+          example: Short description
+        categoryDto: 
+          $ref: '#/components/schemas/CategoryDto'
+        costPrice: 
+          type: number
+          example: 10.04
+        price: 
+          type: number
+          example: 13.5
+        images: 
+          type: array
+          items: 
+            $ref: '#/components/schemas/ImageDto'
+        type: 
+          type: string
+          description: указывает какая сущность создаётся - подарок или упаквока. Должно быть gift/box. По-умолчанию - gift
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagSearchDto'
+        tagFor:
+          type: string
+          description: |- 
+            принимает строку: male/female/unisex. По-умолчанию unisex
+    CategoryDto:
+      type: object
+      properties: 
+        id: 
+          type: integer
+        name: 
+          type: string
+          example: Название категории
+    ImageDto: 
+      type: object
+      properties:
+        id:
+          type: integer
+        giftId:
+          type: integer
+          description: должен иметь id подарка к которому относится
+        link:
+          type: string
+          example: http://link-on-image.ru/image.jpg
+        isMain:
+          type: boolean
+          description: Указывает яв-ся ли данное изображение основным
+    TagSearchDto: 
+      type: object
+      properties:
+        id: 
+          type: integer
+        title: 
+          type: string
+    GiftDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 436
+        title:
+          type: string
+          example: Title for gift
+        description:
+          type: string
+          example: http://link-on-description-html.html
+        shortDescription: 
+          type: string
+          example: Short description
+        categoryDto: 
+          $ref: '#/components/schemas/CategoryDto'
+        costPrice: 
+          type: number
+          example: 10.04
+        price: 
+          type: number
+          example: 13.5
+        dateAdded:
+          type: string
+          description: строка по формату типа даты
+        isEnabled: 
+          type: boolean
+          description: указывает, включен ли данный подарок?
+        images: 
+          type: array
+          items: 
+            $ref: '#/components/schemas/ImageDto'
+        type: 
+          type: string
+          description: указывает какая сущность создаётся - подарок или упаквока. Должно быть gift/box. По-умолчанию - gift
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagSearchDto'
+        tagFor:
+          type: string
+          description: |- 
+            принимает строку: male/female/unisex. По-умолчанию unisex
