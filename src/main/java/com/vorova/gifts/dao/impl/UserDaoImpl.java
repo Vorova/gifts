@@ -23,12 +23,12 @@ public class UserDaoImpl implements UserDao {
     @Override
     public Optional<User> getByUsername(String username) {
         String hql = """
-                FROM User user WHERE user.username = ?
+                FROM User user WHERE user.username = :username
                 """;
         try {
             return Optional.of(
                     entityManager.createQuery(hql, User.class)
-                            .setParameter(1, username)
+                            .setParameter("username", username)
                             .getSingleResult());
         } catch (Exception e) {
             return Optional.empty();

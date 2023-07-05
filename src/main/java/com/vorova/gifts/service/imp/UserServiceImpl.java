@@ -13,22 +13,29 @@ import java.util.Optional;
 
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserServiceImpl implements UserDetailsService {
 
     private final UserDao userDao;
 
     @Autowired
-    public UserService(UserDao userDao) {
+    public UserServiceImpl(UserDao userDao) {
         this.userDao = userDao;
+    }
+
+    public Optional<User> getByUsername(String username) {
+        return userDao.getByUsername(username);
     }
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userDao.getByUsername(username);
-        if (user.isEmpty()) {
-            throw new UsernameNotFoundException("Пользователя с таким именем не существует");
-        }
-        return user.get();
+        User user = getByUsername(username).orElseThrow(
+                () -> new UsernameNotFoundException("Такого пользователя не существует")
+        );
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(),
+                user.getPassword(),
+                user.getAuthorities()
+        );
     }
 }
