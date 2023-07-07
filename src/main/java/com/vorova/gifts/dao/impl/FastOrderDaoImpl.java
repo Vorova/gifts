@@ -9,6 +9,8 @@ import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -24,15 +26,24 @@ public class FastOrderDaoImpl implements FastOrderDao {
 
     @Override
     public Long add(FastOrder fastOrder) {
-        entityManager.persist(fastOrder);
-        return fastOrder.getId();
+        try {
+            entityManager.persist(fastOrder);
+            return fastOrder.getId();
+        } catch (Exception e) {
+            var exception = new FastOrderException();
+            exception.addMessage("Не удалось создать новый подарок");
+            exception.addMessage(e.getMessage());
+            throw exception;
+        }
     }
 
     @Override
     public void update(FastOrder fastOrder) {
         FastOrder persistedFastOrder = getById(fastOrder.getId()).orElse(null);
         if (persistedFastOrder == null) {
-            throw new FastOrderException("Заказа с таким id не существует");
+            var exception = new FastOrderException();
+            exception.addMessage("Заказа с таким id не существует");
+            throw exception;
         }
 
         if (persistedFastOrder.getGift() != fastOrder.getGift() ||
@@ -58,7 +69,14 @@ public class FastOrderDaoImpl implements FastOrderDao {
 
     @Override
     public void remove(FastOrder fastOrder) {
-        entityManager.remove(fastOrder);
+        try {
+            entityManager.remove(fastOrder);
+        } catch (Exception e) {
+            var exception = new FastOrderException();
+            exception.addMessage("Удаление не удалось");
+            exception.addMessage(e.getMessage());
+            throw exception;
+        }
     }
 
     @Override

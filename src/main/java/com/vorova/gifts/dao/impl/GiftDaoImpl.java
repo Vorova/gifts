@@ -2,6 +2,7 @@ package com.vorova.gifts.dao.impl;
 
 import com.vorova.gifts.dao.abstraction.GiftDao;
 import com.vorova.gifts.exception.GiftException;
+import com.vorova.gifts.exception.UserException;
 import com.vorova.gifts.model.entity.Gift;
 import com.vorova.gifts.model.entity.TagSearch;
 import com.vorova.gifts.model.dto.FilterSearchDto;
@@ -28,13 +29,27 @@ public class GiftDaoImpl implements GiftDao {
 
     @Override
     public Long add(Gift gift) {
-        entityManager.persist(gift);
+        try {
+            entityManager.persist(gift);
+        } catch (Exception e) {
+            var exception = new GiftException();
+            exception.addMessage("Сохранение не удалось");
+            exception.addMessage(e.getMessage());
+            throw exception;
+        }
         return gift.getId();
     }
 
     @Override
     public void remove(Gift gift) {
-        entityManager.remove(gift);
+        try {
+            entityManager.remove(gift);
+        } catch (Exception e) {
+            GiftException exception = new GiftException();
+            exception.addMessage("Не удалось удалить пользователя");
+            exception.addMessage(e.getMessage());
+            throw exception;
+        }
     }
 
     @Override
@@ -45,7 +60,7 @@ public class GiftDaoImpl implements GiftDao {
             gift.setType(gift1.getType());
         } catch (Exception e) {
             GiftException exception = new GiftException();
-            exception.addMessage("Такой сущности не существует");
+            exception.addMessage("Обновление не удалось");
             throw exception;
         }
         entityManager.merge(gift);

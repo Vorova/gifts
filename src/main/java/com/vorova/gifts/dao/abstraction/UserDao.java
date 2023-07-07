@@ -7,4 +7,7 @@ public interface UserDao {
 
     Optional<User> getByUsername(String username);
 
+    Long add(User user);
+
+    void update(User user);
 }
