@@ -2,6 +2,7 @@ package com.vorova.gifts.controller;
 
 import com.vorova.gifts.exception.FastOrderException;
 import com.vorova.gifts.mapper.FastOrderMapper;
+import com.vorova.gifts.model.dto.AppErrorDto;
 import com.vorova.gifts.model.dto.CreateFastOrderDto;
 import com.vorova.gifts.model.dto.FastOrderDto;
 import com.vorova.gifts.service.abstraction.FastOrderService;
@@ -10,9 +11,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/fast-order")
-public class FastOrderController {
+public class FastOrderController extends AbstractController{
 
     private final FastOrderService fastService;
     private final FastOrderMapper fastOrderMapper;
@@ -25,41 +29,29 @@ public class FastOrderController {
 
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody CreateFastOrderDto fastOrderDto) {
-        try {
-            fastService.add(fastOrderMapper.toFastOrder(fastOrderDto));
-            return ResponseEntity.status(HttpStatus.CREATED).body("Заказ успешно создан");
-        } catch (FastOrderException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Не удалось создать быстрый заказ: " + e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Неизвестная ошибка! Не удалось создать быстрый заказ!");
-        }
+        fastService.add(fastOrderMapper.toFastOrder(fastOrderDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body("Заказ успешно создан");
     }
 
     @PutMapping("/update")
     public ResponseEntity<?> update(@RequestBody FastOrderDto fastOrderDto) {
-        try {
-            fastService.update(fastOrderMapper.toFastOrder(fastOrderDto));
-            return ResponseEntity.status(HttpStatus.CREATED).body("Заказ успешно обновлен");
-        } catch (FastOrderException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Не удалось обновить быстрый заказ: " + e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Неизвестная ошибка! Не удалось обновить быстрый заказ!");
-        }
+        fastService.update(fastOrderMapper.toFastOrder(fastOrderDto));
+        return ResponseEntity.ok().body("Заказ успешно обновлен");
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable long id) {
-        try {
-            fastService.remove(id);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Заказ успешно удален");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Неизвестная ошибка! Не удалось удалить заказ! Обновите страницу");
-        }
+        fastService.remove(id);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Заказ успешно удален");
+    }
+
+    @ExceptionHandler(FastOrderException.class)
+    public ResponseEntity<AppErrorDto> handlerException(FastOrderException e){
+        AppErrorDto appError = new AppErrorDto(
+                HttpStatus.BAD_REQUEST.value(),
+                e.getMessages()
+        );
+        return new ResponseEntity<>(appError, HttpStatus.BAD_REQUEST);
     }
 
 }

@@ -27,9 +27,8 @@ public class GiftDaoImpl implements GiftDao {
     }
 
     @Override
-    public Long add(Gift gift) throws GiftException {
+    public Long add(Gift gift) {
         entityManager.persist(gift);
-        entityManager.flush();
         return gift.getId();
     }
 
@@ -45,7 +44,9 @@ public class GiftDaoImpl implements GiftDao {
             gift.setDateAdded(gift1.getDateAdded());
             gift.setType(gift1.getType());
         } catch (Exception e) {
-            throw new GiftException("Подарка с таким id не существует");
+            GiftException exception = new GiftException();
+            exception.addMessage("Такой сущности не существует");
+            throw exception;
         }
         entityManager.merge(gift);
     }

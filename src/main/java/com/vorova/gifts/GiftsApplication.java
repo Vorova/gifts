@@ -10,4 +10,5 @@ public class GiftsApplication {
 		SpringApplication.run(GiftsApplication.class, args);
 	}
 
+	// todo добавление UserAdminController
 }

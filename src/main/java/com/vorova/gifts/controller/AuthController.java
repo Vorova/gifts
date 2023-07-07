@@ -12,14 +12,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth/")
-public class AuthController {
+public class AuthController extends AbstractController {
 
     private final UserServiceImpl userService;
     private final JwtTokenUtils jwtUtils;
@@ -34,20 +34,24 @@ public class AuthController {
         this.authenticationManager = authenticationManager;
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                loginDto.getUsername(), loginDto.getPassword()
-            ));
-        } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AppErrorDto (
-                    HttpStatus.UNAUTHORIZED.value(),
-                    "Плохие данные"
-            ));
-        }
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+            loginDto.getUsername(), loginDto.getPassword()
+        ));
         UserDetails userDetails = userService.loadUserByUsername(loginDto.getUsername());
-        JwtResponse jwtResponse = new JwtResponse(jwtUtils.generateToken(userDetails));
-        return new ResponseEntity<>(jwtResponse, HttpStatus.OK);
+        return new ResponseEntity<>(
+                new JwtResponse(jwtUtils.generateToken(userDetails)),
+                HttpStatus.OK);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<AppErrorDto> handlerException(BadCredentialsException e){
+        List<String> errors = new ArrayList<>();
+        errors.add("Некорректные данные для авторизации");
+         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AppErrorDto (
+                HttpStatus.UNAUTHORIZED.value(),
+                errors
+        ));
     }
 }

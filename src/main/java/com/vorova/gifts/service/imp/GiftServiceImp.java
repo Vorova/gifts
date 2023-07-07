@@ -40,8 +40,10 @@ public class GiftServiceImp implements GiftService {
     @Transactional
     public void remove(long id) {
         Optional<Gift> optionalGift = giftDao.getById(id);
-        if(optionalGift.isEmpty()) {
-            throw new GiftException("Подарка с таким id не существует");
+        if (optionalGift.isEmpty()) {
+            GiftException exception = new GiftException();
+            exception.addMessage("Такой сущности не существует");
+            throw exception;
         } else {
             giftDao.remove(optionalGift.get());
         }

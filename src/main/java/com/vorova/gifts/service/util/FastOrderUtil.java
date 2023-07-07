@@ -7,13 +7,18 @@ import com.vorova.gifts.model.entity.Gift;
 public class FastOrderUtil {
 
     public static void checkCorrectly(FastOrder fastOrder) {
+        FastOrderException exception = new FastOrderException();
         if (fastOrder.getRevenue() < 0) {
-            throw new FastOrderException("Себестоимость заказа не может быть больше цены");
+            exception.addMessage("Себестоимость заказа не может быть больше цены");
         }
 
         int lengthTel = fastOrder.getTel().toString().length();
         if (lengthTel > 11 || lengthTel < 10) {
-            throw new FastOrderException("Некорректный номер телефона");
+            exception.addMessage("Некорректный номер телефона");
+        }
+
+        if (!exception.getMessages().isEmpty()) {
+            throw exception;
         }
     }
 

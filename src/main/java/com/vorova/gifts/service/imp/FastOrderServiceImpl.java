@@ -47,17 +47,20 @@ public class FastOrderServiceImpl implements FastOrderService {
     public void update(FastOrder fastOrder) {
         fastOrder.setGift(giftDao.getById(fastOrder.getGift().getId()).orElse(null));
         fastOrder.setBox(giftDao.getById(fastOrder.getBox().getId()).orElse(null));
+        FastOrderUtil.checkCorrectly(fastOrder);
         fastOrderDao.update(fastOrder);
     }
 
     @Override
     @Transactional
     public void remove(Long id) {
-        try {
-            fastOrderDao.remove(fastOrderDao.getById(id).orElse(null));
-        } catch (Exception e) {
-            throw new FastOrderException("Заказа с id " + id + " не существует");
-        }
+        fastOrderDao.remove(fastOrderDao.getById(id).orElseThrow(
+            () -> {
+                FastOrderException exception = new FastOrderException();
+                exception.addMessage("Такого заказа не существует");
+                return exception;
+            }
+        ));
     }
 
 }

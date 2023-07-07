@@ -7,6 +7,7 @@ import com.vorova.gifts.model.entity.Image;
 public class GiftUtil {
 
     public static void checkCorrectly(Gift gift) throws GiftException {
+        GiftException exception = new GiftException();
         if (!gift.getImages().isEmpty()) {
             boolean flag = false;
             for (Image image : gift.getImages()) {
@@ -14,7 +15,7 @@ public class GiftUtil {
                     if (!flag) {
                         flag = true;
                     } else {
-                        throw new GiftException("Только одно изображение может быть основным");
+                        exception.addMessage("Только одно изображение может яв-ся основным");
                     }
                 }
             }
@@ -22,13 +23,11 @@ public class GiftUtil {
                 gift.getImages().get(0).setIsMain(true);
             }
         }
-        StringBuilder errors = new StringBuilder();
         if (gift.getTitle() == null || gift.getTitle().strip().equals("")) {
-            errors.append("Название подарка не может быть пустым. \n");
+            exception.addMessage("Название сущности не может быть пустым");
         }
-        // todo проверка на прнадлежность фотографии к данной сущности
-        if (!errors.isEmpty()) {
-            throw new GiftException(errors.toString());
+        if (!exception.getMessages().isEmpty()) {
+            throw exception;
         }
     }
 

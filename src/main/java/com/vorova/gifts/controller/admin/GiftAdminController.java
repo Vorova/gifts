@@ -1,7 +1,9 @@
 package com.vorova.gifts.controller.admin;
 
+import com.vorova.gifts.controller.AbstractController;
 import com.vorova.gifts.exception.GiftException;
 import com.vorova.gifts.mapper.GiftMapper;
+import com.vorova.gifts.model.dto.AppErrorDto;
 import com.vorova.gifts.model.dto.CreateGiftDto;
 import com.vorova.gifts.model.dto.GiftDto;
 import com.vorova.gifts.service.imp.GiftServiceImp;
@@ -10,9 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequestMapping("/api/admin/gift")
-public class GiftAdminController {
+public class GiftAdminController extends AbstractController {
 
     private final GiftServiceImp giftService;
     private final GiftMapper giftMapper;
@@ -26,40 +29,29 @@ public class GiftAdminController {
 
     @PostMapping("add")
     public ResponseEntity<?> add(@RequestBody CreateGiftDto giftDto) {
-        try {
-            Long gift_id = giftService.add(giftMapper.toGift(giftDto));
-            return ResponseEntity.status(201).body("Подарок успешно добавлен c id = " + gift_id);
-        } catch (GiftException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Не удалось добавить подарок по причине(ам):" + e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .body(e.getMessage());
-                    .body("Неизвестная ошибка! Не удалось добавить подарок");
-        }
+        Long gift_id = giftService.add(giftMapper.toGift(giftDto));
+        return ResponseEntity.status(201).body("Подарок успешно добавлен c id = " + gift_id);
     }
 
     @PutMapping("update")
     public ResponseEntity<?> update(@RequestBody GiftDto giftDto) {
-        try {
-            giftService.update(giftMapper.toGift(giftDto));
-            return ResponseEntity.status(200).body("Изменения сохранены");
-        } catch (GiftException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Изменения не сохранены по причине(ам):" + e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+        giftService.update(giftMapper.toGift(giftDto));
+        return ResponseEntity.ok().body("Изменения сохранены");
     }
 
     @DeleteMapping("delete/{id}")
     public ResponseEntity<?> delete(@PathVariable long id) {
-        try {
-            giftService.remove(id);
-            return ResponseEntity.status(200).body("Подарок удален");
-        } catch (GiftException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+        giftService.remove(id);
+        return ResponseEntity.status(200).body("Сущность удалена");
+    }
+
+    @ExceptionHandler(GiftException.class)
+    public ResponseEntity<AppErrorDto> handlerException(GiftException e) {
+        AppErrorDto appError = new AppErrorDto(
+                HttpStatus.BAD_REQUEST.value(),
+                e.getMessages()
+        );
+        return new ResponseEntity<>(appError, HttpStatus.BAD_REQUEST);
     }
 
 }

@@ -28,3 +28,14 @@ VALUES ('title 1', 'simple description', 'short description for preview', 1, 224
        ('title 15', 'simple description', 'short description for preview', 2, 125, 3000),
        ('title 16', 'simple description', 'short description for preview', 3, 2345, 3000),
        ('title 17', 'simple description', 'short description for preview', 2, 1233, 3000);
+
+INSERT INTO users (username, password)
+VALUES ('admin', '$2a$12$KfuELQNCWHM/Q0A5GgrR6.J8DSKZOL5yOKSQqVzpqrQhZEwjSULa2');
+
+INSERT INTO role (authority)
+VALUES ('ROLE_ADMIN'),
+       ('ROLE_MODERATOR'),
+       ('ROLE_USER');
+
+INSERT INTO users_role (user_id, role_id)
+VALUES (1, 1);

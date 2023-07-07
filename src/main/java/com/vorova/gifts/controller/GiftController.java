@@ -1,6 +1,7 @@
 package com.vorova.gifts.controller;
 
 import com.vorova.gifts.mapper.GiftMapper;
+import com.vorova.gifts.model.dto.AppErrorDto;
 import com.vorova.gifts.model.dto.GiftForUserDto;
 import com.vorova.gifts.model.dto.FilterSearchDto;
 import com.vorova.gifts.service.abstraction.GiftService;
@@ -9,11 +10,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/gift")
-public class GiftController {
+public class GiftController extends AbstractController{
 
     private final GiftMapper giftMapper;
     private final GiftService giftService;
@@ -26,26 +29,23 @@ public class GiftController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id) {
-        try {
-            GiftForUserDto dto = giftMapper.toGiftForUserDto(giftService.getById(id));
-            return ResponseEntity.ok(dto);
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Данного подарка не существует!");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Неизвестная ошибка! Обновите страницу!");
-        }
+        GiftForUserDto dto = giftMapper.toGiftForUserDto(giftService.getById(id));
+        return ResponseEntity.ok(dto);
     }
 
     @PostMapping("/search")
     public ResponseEntity<?> getByFilter(@RequestBody FilterSearchDto filterSearchDto) {
-        try {
-            return ResponseEntity.ok(giftService.getByFilter(filterSearchDto));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(e.toString());
-                    //.body("Неизвестная ошибка! Не удалось получить список подарков");
-        }
+        return ResponseEntity.ok(giftService.getByFilter(filterSearchDto));
     }
 
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<AppErrorDto> handlerException(NoSuchElementException e) {
+        List<String> errors = new ArrayList<>();
+        errors.add("Не существующий элемент");
+        AppErrorDto appErrorDto = new AppErrorDto(
+                HttpStatus.NOT_FOUND.value(),
+                errors
+        );
+        return new ResponseEntity<>(appErrorDto, HttpStatus.NOT_FOUND);
+    }
 }
