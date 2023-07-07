@@ -44,7 +44,7 @@ public class UserAdminController extends AbstractController{
     @ExceptionHandler(UserException.class)
     public ResponseEntity<AppErrorDto> handlerException(UserException e) {
         AppErrorDto appErrorDto = new AppErrorDto(
-                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.BAD_REQUEST.value(),
                 e.getMessages()
         );
         return new ResponseEntity<>(appErrorDto, HttpStatus.BAD_REQUEST);
