@@ -1,6 +1,7 @@
 package com.vorova.gifts.dao.impl;
 
 import com.vorova.gifts.dao.abstraction.UserDao;
+import com.vorova.gifts.exception.UserException;
 import com.vorova.gifts.model.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -32,6 +33,31 @@ public class UserDaoImpl implements UserDao {
                             .getSingleResult());
         } catch (Exception e) {
             return Optional.empty();
+        }
+    }
+
+    @Override
+    public Long add(User user) {
+        try {
+            entityManager.persist(user);
+        } catch (Exception e) {
+            UserException exception = new UserException();
+            exception.addMessage("Не удалось сохранить пользователя");
+            exception.addMessage(e.getMessage());
+            throw exception;
+        }
+        return user.getId();
+    }
+
+    @Override
+    public void update(User user) {
+        try {
+            entityManager.merge(user);
+        } catch (Exception e) {
+            UserException exception = new UserException();
+            exception.addMessage("Не удалось обновить пользователя");
+            exception.addMessage(e.getMessage());
+            throw exception;
         }
     }
 }

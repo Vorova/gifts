@@ -3,8 +3,8 @@ package com.vorova.gifts.exception;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public class GiftException extends AbstractException {
-    public GiftException(String message) {
+public class UserException extends AbstractException {
+    public UserException(String message) {
         super(message);
     }
 }
