@@ -60,4 +60,19 @@ public class UserDaoImpl implements UserDao {
             throw exception;
         }
     }
+
+    @Override
+    public void remove(Long id) {
+        try {
+            var user = new User();
+            user.setId(id);
+            entityManager.remove(user);
+        } catch (Exception e) {
+            var exception = new UserException();
+            exception.addMessage("Не удалось удалить пользователя");
+            exception.addMessage(e.getMessage());
+            throw exception;
+        }
+    }
+
 }

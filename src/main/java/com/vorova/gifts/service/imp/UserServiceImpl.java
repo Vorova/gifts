@@ -54,6 +54,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
+    @Transactional
     public void update(User user) {
         UserUtil.checkCorrectly(user);
         if (user.getId() == null) {
@@ -62,4 +63,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         }
         userDao.update(user);
     }
+
+    @Override
+    @Transactional
+    public void remove(Long id) {
+        userDao.remove(id);
+    }
+
+
 }

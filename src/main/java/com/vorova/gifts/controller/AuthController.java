@@ -49,9 +49,11 @@ public class AuthController extends AbstractController {
     public ResponseEntity<AppErrorDto> handlerException(BadCredentialsException e){
         List<String> errors = new ArrayList<>();
         errors.add("Некорректные данные для авторизации");
-         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AppErrorDto (
-                HttpStatus.UNAUTHORIZED.value(),
-                errors
+        errors.add(e.getMessage());
+         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                 new AppErrorDto (
+                        HttpStatus.UNAUTHORIZED.value(),
+                        errors
         ));
     }
 }
