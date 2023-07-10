@@ -8,6 +8,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,6 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
+@Slf4j
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final JwtTokenUtils jwtTokenUtils;
@@ -39,13 +41,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             jwt = authHeader.substring(7);
             try {
                 username = jwtTokenUtils.getUsername(jwt);
-            } catch (ExpiredJwtException e) {
-                // ignore
             } catch (SignatureException e) {
-                // todo добавлять в логи поддельную сигнатуру
+                log.info("Jwt: попытка подключения с неверной сигнатурой");
                 // ignore
             } catch (MalformedJwtException e) {
-                // todo ломанный токен
+                log.info("Jwt: попытка подключения с ломаным JWT");
                 // ignore
             } catch (Exception e) {
                 // ignore

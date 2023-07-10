@@ -1,4 +1,4 @@
-package com.vorova.gifts.service.imp;
+package com.vorova.gifts.service.impl;
 
 import com.vorova.gifts.dao.abstraction.FastOrderDao;
 import com.vorova.gifts.dao.abstraction.GiftDao;

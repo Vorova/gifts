@@ -59,7 +59,7 @@ public class Gift {
             CascadeType.REMOVE,
             CascadeType.MERGE},
             orphanRemoval = true,
-            fetch = FetchType.LAZY,
+            fetch = FetchType.EAGER,
             mappedBy = "gift")
     private List<Image> images;
 

@@ -6,7 +6,7 @@ import com.vorova.gifts.mapper.GiftMapper;
 import com.vorova.gifts.model.dto.AppErrorDto;
 import com.vorova.gifts.model.dto.CreateGiftDto;
 import com.vorova.gifts.model.dto.GiftDto;
-import com.vorova.gifts.service.imp.GiftServiceImp;
+import com.vorova.gifts.service.impl.GiftServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

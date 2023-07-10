@@ -3,7 +3,7 @@ package com.vorova.gifts.controller;
 import com.vorova.gifts.model.dto.AppErrorDto;
 import com.vorova.gifts.model.dto.JwtResponse;
 import com.vorova.gifts.model.dto.LoginDto;
-import com.vorova.gifts.service.imp.UserServiceImpl;
+import com.vorova.gifts.service.impl.UserServiceImpl;
 import com.vorova.gifts.service.util.JwtTokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

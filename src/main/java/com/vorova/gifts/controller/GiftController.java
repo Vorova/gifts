@@ -16,7 +16,7 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/gift")
-public class GiftController extends AbstractController{
+public class GiftController extends AbstractController {
 
     private final GiftMapper giftMapper;
     private final GiftService giftService;

@@ -1,3 +1,14 @@
+CREATE TYPE ACTION_TYPE as ENUM
+(
+    'ADD_GIFT',
+    'UPDATE_GIFT',
+    'DELETE_GIFT',
+    'CREATE_USER',
+    'UPDATE_USER',
+    'DELETE_USER',
+    'LOGIN_USER'
+);
+
 CREATE TABLE category
 (
     id     SERIAL PRIMARY KEY,
@@ -74,4 +85,13 @@ CREATE TABLE users_role
 (
     user_id BIGINT REFERENCES users (id),
     role_id BIGINT REFERENCES role (id)
+);
+
+CREATE TABLE action
+(
+    id          BIGSERIAL PRIMARY KEY,
+    user_id     BIGINT REFERENCES users (id),
+    date        DATE        NOT NULL,
+    type        ACTION_TYPE NOT NULL,
+    description VARCHAR(128)
 );
