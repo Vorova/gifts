@@ -10,7 +10,7 @@ public interface GiftDao {
 
     Long add(Gift gift);
 
-    void remove(Gift gift);
+    Long remove(Gift gift);
 
     void update(Gift gift);
 

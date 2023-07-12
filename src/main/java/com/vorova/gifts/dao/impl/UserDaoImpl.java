@@ -2,15 +2,10 @@ package com.vorova.gifts.dao.impl;
 
 import com.vorova.gifts.dao.abstraction.UserDao;
 import com.vorova.gifts.exception.UserException;
-import com.vorova.gifts.model.entity.Action;
 import com.vorova.gifts.model.entity.User;
-import com.vorova.gifts.model.enums.ActionType;
-import com.vorova.gifts.service.abstraction.ActionService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -21,12 +16,9 @@ public class UserDaoImpl implements UserDao {
     @PersistenceContext
     private final EntityManager entityManager;
 
-    private final ActionService actionService;
-
     @Autowired
-    public UserDaoImpl(EntityManager entityManager, ActionService actionService) {
+    public UserDaoImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
-        this.actionService = actionService;
     }
 
     @Override
@@ -48,13 +40,6 @@ public class UserDaoImpl implements UserDao {
     public Long add(User user) {
         try {
             entityManager.persist(user);
-            Action action = new Action();
-            // todo add user to action
-
-            action.setUser(null);
-            action.setType(ActionType.CREATE_USER);
-            action.setDescription("create new user");
-            actionService.add(action);
         } catch (Exception e) {
             UserException exception = new UserException();
             exception.addMessage("Не удалось сохранить пользователя");

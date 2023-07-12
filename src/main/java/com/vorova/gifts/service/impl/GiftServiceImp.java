@@ -5,6 +5,8 @@ import com.vorova.gifts.exception.GiftException;
 import com.vorova.gifts.model.dto.FilterSearchDto;
 import com.vorova.gifts.model.entity.Gift;
 import com.vorova.gifts.model.entity.Image;
+import com.vorova.gifts.model.enums.ActionType;
+import com.vorova.gifts.service.abstraction.ActionService;
 import com.vorova.gifts.service.abstraction.GiftService;
 import com.vorova.gifts.service.util.GiftUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +22,12 @@ import java.util.Optional;
 public class GiftServiceImp implements GiftService {
 
     private final GiftDao giftDao;
+    private final ActionService actionService;
 
     @Autowired
-    public GiftServiceImp(GiftDao giftDao) {
+    public GiftServiceImp(GiftDao giftDao, ActionService actionService) {
         this.giftDao = giftDao;
+        this.actionService = actionService;
     }
 
     @Override
@@ -35,7 +39,12 @@ public class GiftServiceImp implements GiftService {
                 image.setGift(gift);
             }
         }
-        return giftDao.add(gift);
+
+        Long newGiftId = giftDao.add(gift);
+        actionService.add(ActionType.ADD_GIFT,
+                newGiftId);
+
+        return newGiftId;
     }
 
     @Override
@@ -47,7 +56,7 @@ public class GiftServiceImp implements GiftService {
             exception.addMessage("Такой сущности не существует");
             throw exception;
         } else {
-            giftDao.remove(optionalGift.get());
+            actionService.add(ActionType.DELETE_GIFT, giftDao.remove(optionalGift.get()));
         }
     }
 
@@ -61,6 +70,7 @@ public class GiftServiceImp implements GiftService {
         }
         GiftUtil.checkCorrectly(gift);
         giftDao.update(gift);
+        actionService.add(ActionType.UPDATE_GIFT, gift.getId());
     }
 
     @Override

@@ -2,13 +2,15 @@ package com.vorova.gifts.dao.impl;
 
 import com.vorova.gifts.dao.abstraction.GiftDao;
 import com.vorova.gifts.exception.GiftException;
-import com.vorova.gifts.exception.UserException;
+import com.vorova.gifts.model.dto.FilterSearchDto;
 import com.vorova.gifts.model.entity.Gift;
 import com.vorova.gifts.model.entity.TagSearch;
-import com.vorova.gifts.model.dto.FilterSearchDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.criteria.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -41,12 +43,13 @@ public class GiftDaoImpl implements GiftDao {
     }
 
     @Override
-    public void remove(Gift gift) {
+    public Long remove(Gift gift) {
         try {
             entityManager.remove(gift);
+            return gift.getId();
         } catch (Exception e) {
             GiftException exception = new GiftException();
-            exception.addMessage("Не удалось удалить пользователя");
+            exception.addMessage("Не удалось удалить сущность");
             exception.addMessage(e.getMessage());
             throw exception;
         }
@@ -76,7 +79,6 @@ public class GiftDaoImpl implements GiftDao {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<Gift> getByFilter(FilterSearchDto filter) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();

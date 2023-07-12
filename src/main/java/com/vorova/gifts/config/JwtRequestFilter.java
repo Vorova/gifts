@@ -1,7 +1,6 @@
 package com.vorova.gifts.config;
 
 import com.vorova.gifts.service.util.JwtTokenUtils;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import jakarta.servlet.FilterChain;
@@ -35,18 +34,20 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                                     FilterChain filter) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
         String username = null;
+        Long userId = null;
         String jwt = null;
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             jwt = authHeader.substring(7);
             try {
                 username = jwtTokenUtils.getUsername(jwt);
+                userId = jwtTokenUtils.getId(jwt);
             } catch (SignatureException e) {
-                log.info("Jwt: попытка подключения с неверной сигнатурой");
-                // ignore
+                log.info(
+                    "Jwt: попытка подключения с неверной сигнатурой. Ip запроса : " + request.getRemoteAddr());
             } catch (MalformedJwtException e) {
-                log.info("Jwt: попытка подключения с ломаным JWT");
-                // ignore
+                log.info(
+                    "Jwt: попытка подключения с ломаным JWT. Ip запроса : " + request.getRemoteAddr());
             } catch (Exception e) {
                 // ignore
             }
@@ -55,7 +56,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(
                         username,
-                        null,
+                        userId,
                         jwtTokenUtils.getRoles(jwt)
                                 .stream()
                                 .map(SimpleGrantedAuthority::new)

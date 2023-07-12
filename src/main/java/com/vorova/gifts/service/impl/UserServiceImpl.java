@@ -3,6 +3,8 @@ package com.vorova.gifts.service.impl;
 import com.vorova.gifts.dao.abstraction.UserDao;
 import com.vorova.gifts.exception.UserException;
 import com.vorova.gifts.model.entity.User;
+import com.vorova.gifts.model.enums.ActionType;
+import com.vorova.gifts.service.abstraction.ActionService;
 import com.vorova.gifts.service.abstraction.UserService;
 import com.vorova.gifts.service.util.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +23,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     private final UserDao userDao;
     private final PasswordEncoder passwordEncoder;
+    private final ActionService actionService;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserDao userDao, PasswordEncoder passwordEncoder, ActionService actionService) {
         this.userDao = userDao;
         this.passwordEncoder = passwordEncoder;
+        this.actionService = actionService;
     }
 
     public Optional<User> getByUsername(String username) {
@@ -50,7 +54,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     public Long add(User user) {
         UserUtil.checkCorrectly(user);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userDao.add(user);
+
+        Long newUserId = userDao.add(user);
+        actionService.add(ActionType.CREATE_USER, newUserId);
+
+        return newUserId;
     }
 
     @Override
@@ -62,12 +70,14 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             exception.addMessage("Нельзя обновлять нулевого пользователя");
         }
         userDao.update(user);
+        actionService.add(ActionType.UPDATE_USER, user.getId());
     }
 
     @Override
     @Transactional
     public void remove(Long id) {
         userDao.remove(id);
+        actionService.add(ActionType.DELETE_USER, id);
     }
 
 

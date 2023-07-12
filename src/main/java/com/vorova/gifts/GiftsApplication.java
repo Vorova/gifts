@@ -9,9 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class GiftsApplication {
 
 	public static void main(String[] args) {
-		log.info("Starting app");
 		SpringApplication.run(GiftsApplication.class, args);
-		log.info("Finished app");
 	}
 
 }

@@ -3,6 +3,7 @@ package com.vorova.gifts.controller;
 import com.vorova.gifts.model.dto.AppErrorDto;
 import com.vorova.gifts.model.dto.JwtResponse;
 import com.vorova.gifts.model.dto.LoginDto;
+import com.vorova.gifts.model.entity.User;
 import com.vorova.gifts.service.impl.UserServiceImpl;
 import com.vorova.gifts.service.util.JwtTokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -39,9 +39,11 @@ public class AuthController extends AbstractController {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
             loginDto.getUsername(), loginDto.getPassword()
         ));
-        UserDetails userDetails = userService.loadUserByUsername(loginDto.getUsername());
+        User user = userService.getByUsername(loginDto.getUsername()).orElseThrow(
+                () -> new BadCredentialsException("Такого пользователя не существует")
+        );
         return new ResponseEntity<>(
-                new JwtResponse(jwtUtils.generateToken(userDetails)),
+                new JwtResponse(jwtUtils.generateToken(user)),
                 HttpStatus.OK);
     }
 
@@ -56,4 +58,5 @@ public class AuthController extends AbstractController {
                         errors
         ));
     }
+
 }
