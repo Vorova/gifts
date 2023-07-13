@@ -3,17 +3,18 @@ package com.vorova.gifts.dao.impl;
 import com.vorova.gifts.dao.abstraction.FastOrderDao;
 import com.vorova.gifts.exception.FastOrderException;
 import com.vorova.gifts.model.entity.FastOrder;
+import com.vorova.gifts.model.enums.FastOrderStatus;
 import com.vorova.gifts.service.util.FastOrderUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
+@Slf4j
 public class FastOrderDaoImpl implements FastOrderDao {
 
     @PersistenceContext
@@ -46,6 +47,12 @@ public class FastOrderDaoImpl implements FastOrderDao {
             throw exception;
         }
 
+        if (!persistedFastOrder.getStatus().equals(FastOrderStatus.NEW)) {
+            var exception = new FastOrderException();
+            exception.addMessage("Возможно изменение только не оплаченных заказов");
+            throw exception;
+        }
+
         if (persistedFastOrder.getGift() != fastOrder.getGift() ||
                 persistedFastOrder.getBox() != fastOrder.getBox()) {
             double costs = FastOrderUtil.getAllCost(fastOrder);
@@ -74,7 +81,6 @@ public class FastOrderDaoImpl implements FastOrderDao {
         } catch (Exception e) {
             var exception = new FastOrderException();
             exception.addMessage("Удаление не удалось");
-            exception.addMessage(e.getMessage());
             throw exception;
         }
     }
@@ -85,6 +91,26 @@ public class FastOrderDaoImpl implements FastOrderDao {
             return Optional.of(entityManager.find(FastOrder.class, id));
         } catch (Exception e) {
             return Optional.empty();
+        }
+    }
+
+    @Override
+    public void updateStatus(Long id, FastOrderStatus fastOrderStatus) {
+        String hql = """
+            UPDATE FastOrder as order
+            SET order.status = :newStatus
+            WHERE order.id = :id
+            """;
+        try {
+            entityManager
+                    .createQuery(hql)
+                    .setParameter("newStatus", fastOrderStatus)
+                    .setParameter("id", id);
+        } catch (Exception e) {
+            var exception = new FastOrderException();
+            exception.addMessage("Не удалось обновить статус заказа");
+            log.info("Не удалось обновить статус заказа");
+            throw exception;
         }
     }
 }

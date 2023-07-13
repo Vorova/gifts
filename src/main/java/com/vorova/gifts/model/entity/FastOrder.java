@@ -1,5 +1,6 @@
 package com.vorova.gifts.model.entity;
 
+import com.vorova.gifts.model.enums.FastOrderStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -53,7 +54,8 @@ public class FastOrder {
     private String name;
 
     @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private FastOrderStatus status = FastOrderStatus.NEW;
 
     @Override
     public boolean equals(Object o) {
