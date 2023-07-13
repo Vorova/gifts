@@ -3,11 +3,13 @@ package com.vorova.gifts.controller;
 import com.vorova.gifts.exception.FastOrderException;
 import com.vorova.gifts.mapper.FastOrderMapper;
 import com.vorova.gifts.model.dto.AppErrorDto;
+import com.vorova.gifts.model.dto.AppResponse;
 import com.vorova.gifts.model.dto.CreateFastOrderDto;
 import com.vorova.gifts.model.dto.FastOrderDto;
 import com.vorova.gifts.service.abstraction.FastOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,19 +29,28 @@ public class FastOrderController extends AbstractController{
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody CreateFastOrderDto fastOrderDto) {
         fastService.add(fastOrderMapper.toFastOrder(fastOrderDto));
-        return ResponseEntity.status(HttpStatus.CREATED).body("Заказ успешно создан");
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(AppResponse.response("Заказ успешно создан"));
     }
 
     @PutMapping("/update")
     public ResponseEntity<?> update(@RequestBody FastOrderDto fastOrderDto) {
         fastService.update(fastOrderMapper.toFastOrder(fastOrderDto));
-        return ResponseEntity.ok().body("Заказ успешно обновлен");
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(AppResponse.response("Изменения сохранены"));
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable long id) {
         fastService.remove(id);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Заказ успешно удален");
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(AppResponse.response("Заказ успешно удален"));
     }
 
     @ExceptionHandler(FastOrderException.class)

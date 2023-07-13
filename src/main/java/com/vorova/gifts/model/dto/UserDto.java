@@ -1,16 +1,16 @@
 package com.vorova.gifts.model.dto;
 
-import com.vorova.gifts.model.entity.Role;
+import lombok.Builder;
 import lombok.Data;
-
 import java.util.List;
 
+@Builder
 @Data
 public class UserDto {
 
-    private Long id = null;
+    private Long id;
     private String username;
     private String password;
-    private List<RoleDto> roles;
+    private List<RoleDto> authorities;
 
 }

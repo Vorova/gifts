@@ -16,7 +16,6 @@ public class UserMapper {
     @Autowired
     public UserMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
-
         modelMapper.createTypeMap(Role.class, RoleDto.class);
     }
 

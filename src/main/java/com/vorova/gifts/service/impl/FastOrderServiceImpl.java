@@ -45,6 +45,7 @@ public class FastOrderServiceImpl implements FastOrderService {
     @Override
     @Transactional
     public void update(FastOrder fastOrder) {
+        //todo проверка заказа на статус (Не может быть new)
         fastOrder.setGift(giftDao.getById(fastOrder.getGift().getId()).orElse(null));
         fastOrder.setBox(giftDao.getById(fastOrder.getBox().getId()).orElse(null));
         FastOrderUtil.checkCorrectly(fastOrder);
@@ -54,6 +55,7 @@ public class FastOrderServiceImpl implements FastOrderService {
     @Override
     @Transactional
     public void remove(Long id) {
+        //todo проверка заказа на статус (Не может быть new)
         fastOrderDao.remove(fastOrderDao.getById(id).orElseThrow(
             () -> {
                 FastOrderException exception = new FastOrderException();

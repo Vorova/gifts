@@ -43,7 +43,6 @@ public class UserDaoImpl implements UserDao {
         } catch (Exception e) {
             UserException exception = new UserException();
             exception.addMessage("Не удалось сохранить пользователя");
-            exception.addMessage(e.getMessage());
             throw exception;
         }
         return user.getId();
@@ -56,7 +55,6 @@ public class UserDaoImpl implements UserDao {
         } catch (Exception e) {
             UserException exception = new UserException();
             exception.addMessage("Не удалось обновить пользователя");
-            exception.addMessage(e.getMessage());
             throw exception;
         }
     }
@@ -70,7 +68,6 @@ public class UserDaoImpl implements UserDao {
         } catch (Exception e) {
             var exception = new UserException();
             exception.addMessage("Не удалось удалить пользователя");
-            exception.addMessage(e.getMessage());
             throw exception;
         }
     }

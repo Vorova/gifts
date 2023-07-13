@@ -26,7 +26,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private final ActionService actionService;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao, PasswordEncoder passwordEncoder, ActionService actionService) {
+    public UserServiceImpl(UserDao userDao,
+                           PasswordEncoder passwordEncoder,
+                           ActionService actionService) {
         this.userDao = userDao;
         this.passwordEncoder = passwordEncoder;
         this.actionService = actionService;
@@ -79,6 +81,5 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         userDao.remove(id);
         actionService.add(ActionType.DELETE_USER, id);
     }
-
 
 }
